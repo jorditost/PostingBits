@@ -30,6 +30,9 @@ package StageDetector;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+
 import processing.core.*;
 import gab.opencv.*;
 
@@ -49,8 +52,9 @@ public class StageDetector {
 	
 	private OpenCV opencv;
 	  
-	private PImage inputImage; 
-	private PImage outputImage;
+	private PImage inputImage;
+	private PImage backgroundImage;
+	//private PImage outputImage;
   
 	private ArrayList<Contour> contours;
 	private ArrayList<StageElement> stageElements;
@@ -87,13 +91,13 @@ public class StageDetector {
      * You will need to load an image in before processing.
      * Good when working with video.
      * 
-     * @param theParent
+     * @param parent
      * 			A PApplet representing the user sketch, i.e "this"
      * @param width
      * @param height
      */
-	public StageDetector(PApplet theParent, int width, int height) {
-	    parent = theParent;
+	public StageDetector(PApplet parent, int width, int height) {
+	    this.parent = parent;
 	    useColorTracking = false;
 	    init(width, height);
 	}
@@ -102,13 +106,13 @@ public class StageDetector {
      * Initialize StageDetector with the path to an image.
      * The image will be loaded and prepared for processing.
      * 
-     * @param theParent 
+     * @param parent 
      * 			A PApplet representing the user sketch, i.e "this"
      * @param pathToImg
      * 			A String with a path to the image to be loaded
      */
-	public StageDetector(PApplet theParent, String pathToImg) {
-	    parent = theParent;
+	public StageDetector(PApplet parent, String pathToImg) {
+	    this.parent = parent;
 	    useColorTracking = false;
 	    initFromString(pathToImg);
 	}
@@ -117,17 +121,32 @@ public class StageDetector {
      * Initialize StageDetector with the path to an image.
      * The image will be loaded and prepared for processing.
      * 
-     * @param theParent
+     * @param parent
      * 			A PApplet representing the user sketch, i.e "this"
      * @param pathToImg
      * 			A String with a path to the image to be loaded
      * @param useColorTracking 
      * 			(Optional) Set to true if you want to perform color tracking
      */
-	public StageDetector(PApplet theParent, String pathToImg, boolean useColorTracking) {
-	    parent = theParent;
+	public StageDetector(PApplet parent, String pathToImg, boolean useColorTracking) {
+	    this.parent = parent;
 	    this.useColorTracking = useColorTracking;
 	    initFromString(pathToImg);
+	}
+	
+	/**
+     * Initialize StageDetector with an image.
+     * The image will be loaded and prepared for processing.
+     * 
+     * @param parent 
+     * 			A PApplet representing the user sketch, i.e "this"
+     * @param img
+     * 			A PImage to be loaded
+     */
+	public StageDetector(PApplet parent, PImage img) {
+	    this.parent = parent;
+	    useColorTracking = false;
+	    initFromPImage(img);
 	}
 	
 	/**
@@ -141,6 +160,18 @@ public class StageDetector {
 	    PImage imageToLoad = parent.loadImage(pathToImg);
 	    init(imageToLoad.width, imageToLoad.height);
 	    loadImage(imageToLoad);
+	}
+	
+	/**
+     * Loads an image and initializes the OpenCV object with it.
+     * Used when initializing the detector with an image.
+     * 
+     * @param img
+     * 			A PImage to be loaded
+     */
+	private void initFromPImage(PImage img) {
+	    init(img.width, img.height);
+	    loadImage(img);
 	}
 	
 	/**
@@ -167,13 +198,10 @@ public class StageDetector {
 		
 		contours = new ArrayList<Contour>();
 		stageElements = new ArrayList<StageElement>();
-		
-		//inputImage  = new PImage(width, height);
-		//outputImage = new PImage(width, height);
 	}
 	
 	/**
-	 * Load an image from a path.
+	 * Load a background image from a path (for background substraction)
 	 * 
 	 * @param imgPath
 	 * 			String with the path to the image
@@ -189,12 +217,56 @@ public class StageDetector {
 	 */
 	public void loadImage(PImage img) {
 	    inputImage = img;
-	    opencv.loadImage(inputImage);
+	    
+	    // If background substraction mode, then use this image as stage image
+	    if (detectionMode == DetectionMode.BG_SUBSTRACTION) {
+	    	if (backgroundImage == null) {
+	    		backgroundImage = inputImage.get(); // use get to avoid to get video object
+	    	}
+	    	opencv.loadImage(backgroundImage);
+	    	opencv.diff(inputImage);
+	    } else {
+	    	opencv.loadImage(inputImage);
+	    }
 	}
 	
 	/**
+	 * Load a background image from a path.
+	 * 
+	 * @param imgPath
+	 * 			String with the path to the background image
+	 */
+	public void loadBackgroundImage(String imgPath) {
+		loadBackgroundImage(parent.loadImage(imgPath));
+	}
+	
+	/**
+	 * Load a background image into OpenCV
+	 * 
+	 * @param img
+	 */
+	public void loadBackgroundImage(PImage img) {
+	    backgroundImage = img;
+	}
+	
+	/**
+	 * Calculate the difference between the background image previously
+	 * loaded into OpenCV and a second image. The result is stored
+	 * in the loaded image in OpenCV. Works on both color and grayscale
+	 * images.
+	 * 
+	 * @param img
+	 * 		A PImage to diff against.
+	 */
+	/*public void diff(PImage img) {
+		inputImage = img;
+	    opencv.loadImage(backgroundImage);
+	    opencv.diff(inputImage);
+	}*/
+	
+	/**
 	 * Detects the stage elements.
-	 * An image must be previously loaded with loadImage()
+	 * An image must have been previously loaded with loadImage() or diff()
 	 * 
 	 * @returns ArrayList<StageElement>
 	 */
@@ -218,7 +290,6 @@ public class StageDetector {
 	    // Detection channel
 	    if (detectionMode == DetectionMode.CHANNEL_S) {
 	    	opencv.useColor(PApplet.HSB);
-	    	//Mat satChannel = imitate(opencv.getS());
 	    	opencv.setGray(opencv.getS().clone());
 	    } else {
 	    	opencv.gray();
@@ -494,6 +565,13 @@ public class StageDetector {
 	 */
 	public void drawBackground() {
 		parent.image(inputImage, 0, 0);
+	}
+	
+	public void drawDiff() {
+		opencv.loadImage(backgroundImage);
+		opencv.diff(inputImage);
+		parent.image(opencv.getSnapshot(), 0, 0);
+		//parent.image(backgroundImage, 0, 0);
 	}
 	
 	public void drawStageElements() {
