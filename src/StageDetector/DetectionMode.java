@@ -11,14 +11,14 @@ package StageDetector;
 public enum DetectionMode { 
 	CHANNEL_GRAY, 		// Gray channel. More stable with video source
 	CHANNEL_S, 			// Saturation channel
-	BG_SUBSTRACTION;	// Background Substraction
+	BG_SUBTRACTION;	// Background Subtraction
 	
 	
 	public String displayName() {
         switch(this) {
             case CHANNEL_GRAY: 		return "Gray Channel";
             case CHANNEL_S: 		return "Saturation Channel";
-            case BG_SUBSTRACTION: 	return "Background Substraction";
+            case BG_SUBTRACTION: 	return "Background Subtraction";
         }
         return null;
     }

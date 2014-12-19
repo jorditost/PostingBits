@@ -9,7 +9,7 @@ void setup() {
   after = loadImage("after.jpg");
     
   stage = new StageDetector(this, before.width, before.height);
-  stage.setDetectionMode(DetectionMode.BG_SUBSTRACTION);
+  stage.setDetectionMode(DetectionMode.BG_SUBTRACTION);
     
   //stage.diff(before, after);
   stage.loadBackgroundImage(before);

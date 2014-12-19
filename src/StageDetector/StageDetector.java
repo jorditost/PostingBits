@@ -54,7 +54,7 @@ public class StageDetector {
 	  
 	private PImage inputImage;
 	private PImage backgroundImage;
-	//private PImage outputImage;
+	private PImage outputImage;
   
 	private ArrayList<Contour> contours;
 	private ArrayList<StageElement> stageElements;
@@ -218,9 +218,10 @@ public class StageDetector {
 	public void loadImage(PImage img) {
 	    inputImage = img;
 	    
-	    // If background substraction mode, then use this image as stage image
-	    if (detectionMode == DetectionMode.BG_SUBSTRACTION) {
+	    // If background subtraction mode, then use this image as stage image
+	    if (detectionMode == DetectionMode.BG_SUBTRACTION) {
 	    	if (backgroundImage == null) {
+	    		PApplet.println("dale");
 	    		backgroundImage = inputImage.get(); // use get to avoid to get video object
 	    	}
 	    	opencv.loadImage(backgroundImage);
@@ -246,7 +247,7 @@ public class StageDetector {
 	 * @param img
 	 */
 	public void loadBackgroundImage(PImage img) {
-	    backgroundImage = img;
+	    backgroundImage = img.get();
 	}
 	
 	/**
@@ -310,20 +311,20 @@ public class StageDetector {
 	    // Adaptive threshold - Good when non-uniform illumination
 	    if (useAdaptiveThreshold) {
 	      
-	      // Block size must be odd and greater than 3
-	      if (thresholdBlockSize%2 == 0) thresholdBlockSize++;
-	      if (thresholdBlockSize < 3) thresholdBlockSize = 3;
+	    	// Block size must be odd and greater than 3
+	    	if (thresholdBlockSize%2 == 0) thresholdBlockSize++;
+	    	if (thresholdBlockSize < 3) thresholdBlockSize = 3;
 	      
-	      opencv.adaptiveThreshold(thresholdBlockSize, thresholdConstant);
+	    	opencv.adaptiveThreshold(thresholdBlockSize, thresholdConstant);
 	      
 	    // Basic threshold - range [0, 255]
 	    } else {
-	      opencv.threshold(threshold);
+	    	opencv.threshold(threshold);
 	    }
 	  
 	    // Invert (black bg, white blobs)
 	    if (detectionMode == DetectionMode.CHANNEL_GRAY) {
-	      opencv.invert();
+	    	opencv.invert();
 	    }
 	    
 	    // Reduce noise - Dilate and erode to close holes
@@ -340,7 +341,7 @@ public class StageDetector {
 	    }
 	    
 	    // Save snapshot for display
-	    //outputImage = opencv.getSnapshot();
+	    outputImage = opencv.getSnapshot();
 	    
 	    ///////////////////////////////
 	    // <3> FIND CONTOURS  
@@ -511,7 +512,7 @@ public class StageDetector {
 	    this.threshold = threshold;
 	}
 	  
-	public void setUseAdaptiveThreshold(boolean flag) {
+	public void useAdaptiveThreshold(boolean flag) {
 	    this.useAdaptiveThreshold = flag;
 	}
 	  
@@ -559,7 +560,6 @@ public class StageDetector {
 	    useColorTracking = value;
 	}
 	
-	
 	/**
 	 * Display functions
 	 */
@@ -567,21 +567,25 @@ public class StageDetector {
 		parent.image(inputImage, 0, 0);
 	}
 	
+	public void drawBackgroundImage() {
+		parent.image(backgroundImage, 0, 0);
+	}
+	
+	public void drawOutputImage() {
+		parent.image(outputImage, 0, 0);
+		//parent.image(outputImage, 3*width/4, 3*height/4, width/4, height/4);
+	}
+	
 	public void drawDiff() {
 		opencv.loadImage(backgroundImage);
 		opencv.diff(inputImage);
 		parent.image(opencv.getSnapshot(), 0, 0);
-		//parent.image(backgroundImage, 0, 0);
 	}
 	
 	public void drawStageElements() {
 		for (StageElement stageElement : stageElements) {
 			stageElement.draw();
 		}
-	}
-	
-	public void drawOutputImage() {
-		//parent.image(outputImage, 3*width/4, 3*height/4, width/4, height/4);
 	}
 	
 	
