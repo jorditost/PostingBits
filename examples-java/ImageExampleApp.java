@@ -8,10 +8,15 @@ import BitStage.*;
 public class ImageExampleApp extends PApplet {
 
 	BitStage stage;
-	PImage image;
 
 	public void setup() {
 		stage = new BitStage(this, "kitchen.jpg");
+		
+		stage.useColorTracking(true);
+		//stage.setRedHue(166);
+		stage.setGreenHue(44);
+		//stage.setBlueHue(104);
+		
 		stage.detect();
 		
 		size(stage.width, stage.height);
