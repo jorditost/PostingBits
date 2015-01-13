@@ -1,14 +1,14 @@
 import gab.opencv.*;
-import StageDetector.*;
+import BitStage.*;
 
-StageDetector stage;
+BitStage stage;
 PImage  before, after;
 
 void setup() {
   before = loadImage("before.jpg");
   after = loadImage("after.jpg");
     
-  stage = new StageDetector(this, before.width, before.height);
+  stage = new BitStage(this, before.width, before.height);
   stage.setDetectionMode(DetectionMode.BG_SUBTRACTION);
     
   //stage.diff(before, after);

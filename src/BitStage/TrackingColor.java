@@ -1,4 +1,4 @@
-package StageDetector;
+package BitStage;
 
 /**
  * TrackingColor

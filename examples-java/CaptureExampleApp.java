@@ -1,21 +1,20 @@
 import processing.core.PApplet;
 import processing.video.*;
-
-import StageDetector.*;
+import BitStage.*;
 
 /**
  * Performs a basic detection from a camera.
  */
 public class CaptureExampleApp extends PApplet {
 
-	StageDetector stage;
+	BitStage stage;
 	Capture video;
 
 	public void setup() {
 		video = new Capture(this, 640, 480);
 	    video.start();
 	    
-	    stage = new StageDetector(this, 640, 480);
+	    stage = new BitStage(this, 640, 480);
 	    //stage.setDetectionMode(DetectionMode.CHANNEL_GRAY);
 	    
 	    stage.listFilterValues();

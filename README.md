@@ -1,4 +1,4 @@
-StageDetector
+BitStage
 ==============
 
 Processing library by Jordi Tost

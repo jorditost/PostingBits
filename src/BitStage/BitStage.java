@@ -25,7 +25,7 @@
  * @version     ##library.prettyVersion## (##library.version##)
  */
 
-package StageDetector;
+package BitStage;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ import gab.opencv.*;
  * https://github.com/atduskgreg/opencv-processing
  */
 
-public class StageDetector {
+public class BitStage {
 		
 	PApplet parent;
 	
@@ -87,7 +87,7 @@ public class StageDetector {
 	
 	
 	/**
-     * Initialize StageDetector with a width and height.
+     * Initialize BitStage with a width and height.
      * You will need to load an image in before processing.
      * Good when working with video.
      * 
@@ -96,14 +96,14 @@ public class StageDetector {
      * @param width
      * @param height
      */
-	public StageDetector(PApplet parent, int width, int height) {
+	public BitStage(PApplet parent, int width, int height) {
 	    this.parent = parent;
 	    useColorTracking = false;
 	    init(width, height);
 	}
 	
 	/**
-     * Initialize StageDetector with the path to an image.
+     * Initialize BitStage with the path to an image.
      * The image will be loaded and prepared for processing.
      * 
      * @param parent 
@@ -111,14 +111,14 @@ public class StageDetector {
      * @param pathToImg
      * 			A String with a path to the image to be loaded
      */
-	public StageDetector(PApplet parent, String pathToImg) {
+	public BitStage(PApplet parent, String pathToImg) {
 	    this.parent = parent;
 	    useColorTracking = false;
 	    initFromString(pathToImg);
 	}
 	
 	/**
-     * Initialize StageDetector with the path to an image.
+     * Initialize BitStage with the path to an image.
      * The image will be loaded and prepared for processing.
      * 
      * @param parent
@@ -128,14 +128,14 @@ public class StageDetector {
      * @param useColorTracking 
      * 			(Optional) Set to true if you want to perform color tracking
      */
-	public StageDetector(PApplet parent, String pathToImg, boolean useColorTracking) {
+	public BitStage(PApplet parent, String pathToImg, boolean useColorTracking) {
 	    this.parent = parent;
 	    this.useColorTracking = useColorTracking;
 	    initFromString(pathToImg);
 	}
 	
 	/**
-     * Initialize StageDetector with an image.
+     * Initialize BitStage with an image.
      * The image will be loaded and prepared for processing.
      * 
      * @param parent 
@@ -143,7 +143,7 @@ public class StageDetector {
      * @param img
      * 			A PImage to be loaded
      */
-	public StageDetector(PApplet parent, PImage img) {
+	public BitStage(PApplet parent, PImage img) {
 	    this.parent = parent;
 	    useColorTracking = false;
 	    initFromPImage(img);
@@ -455,7 +455,7 @@ public class StageDetector {
      * @param colorId
      * 			The color id
      * @return ArrayList<StageElement>
-     * 			Cloned array to manipulate outside StageDetector
+     * 			Cloned array to manipulate outside BitStage
      */
 	private ArrayList<StageElement> getStageElements(ArrayList<Contour> contoursArray, TrackingColor colorId) {
 	    
@@ -594,7 +594,7 @@ public class StageDetector {
 	 */
 	public void listFilterValues() {
 		PApplet.println(" ");
-		PApplet.println("StageDetector filter values");
+		PApplet.println("BitStage filter values");
 		PApplet.println("==============================");
 		PApplet.println("- Detection Mode:          " + detectionMode.displayName());
 		PApplet.println("- Contrast:                " + contrast);

@@ -1,11 +1,11 @@
 import gab.opencv.*;
-import StageDetector.*;
+import BitStage.*;
 
-StageDetector stage;
+BitStage stage;
 PImage image;
 
 void setup() {
-  stage = new StageDetector(this, "data/kitchen.jpg"); 
+  stage = new BitStage(this, "data/kitchen.jpg"); 
   stage.detect();
   
   size(stage.width, stage.height);

@@ -6,7 +6,7 @@
  * enum TrackingColorMode {GRAY, S} //{TRACK_COLOR_RGB, TRACK_COLOR_HSV, TRACK_COLOR_H, TRACK_COLOR_HS};
  */
 
-package StageDetector;
+package BitStage;
 	
 public enum DetectionMode { 
 	CHANNEL_GRAY, 		// Gray channel. More stable with video source

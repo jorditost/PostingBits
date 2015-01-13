@@ -1,18 +1,17 @@
 import processing.core.PApplet;
 import processing.core.PImage;
-
-import StageDetector.*;
+import BitStage.*;
 
 /**
  * Performs a basic detection from an image.
  */
 public class ImageExampleApp extends PApplet {
 
-	StageDetector stage;
+	BitStage stage;
 	PImage image;
 
 	public void setup() {
-		stage = new StageDetector(this, "kitchen.jpg");
+		stage = new BitStage(this, "kitchen.jpg");
 		stage.detect();
 		
 		size(stage.width, stage.height);
