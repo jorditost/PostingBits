@@ -403,6 +403,7 @@ public class BitStage {
 	    	// Find RED Contours
 	    	if (redH > -1) {
 	    		ArrayList<Contour> redContours = parseContours(findContoursByColor(redH));
+	    		redContours = getFirstContours(redContours, 3);
 		    	blobPersistenceByColor(redContours, TrackingColor.RED);
 		    	//contours.addAll(redContours);
 		    	//ArrayList<StageElement> redStageElements = parseStageElementsFromContours(redContours, TrackingColor.RED);
@@ -411,7 +412,14 @@ public class BitStage {
 	    	// Find GREEN Contours
 	    	if (greenH > -1) {
 		    	ArrayList<Contour> greenContours = parseContours(findContoursByColor(greenH));
+		    	greenContours = getFirstContours(greenContours, 3);
+		    	
+		    	for (Contour c : greenContours) {
+					c.draw();
+				}
+		    	
 		    	PApplet.println("num green contours: " + greenContours.size());
+		    	
 		    	blobPersistenceByColor(greenContours, TrackingColor.GREEN);
 		    	//contours.addAll(greenContours);
 		    	//ArrayList<StageElement> greenStageElements = parseStageElementsFromContours(greenContours, TrackingColor.GREEN);
@@ -420,6 +428,7 @@ public class BitStage {
 	    	// Find BLUE Contours
 	    	if (blueH > -1) {
 		    	ArrayList<Contour> blueContours = parseContours(findContoursByColor(blueH));
+		    	blueContours = getFirstContours(blueContours, 3);
 		    	blobPersistenceByColor(blueContours, TrackingColor.BLUE);
 		    	//contours.addAll(blueContours);
 		    	//ArrayList<StageElement> blueStageElements = parseStageElementsFromContours(blueContours, TrackingColor.BLUE);
@@ -563,9 +572,12 @@ public class BitStage {
      * 
      * @param contoursArray
      * 			Array of the contours to parse
+     * @param maxContours
+     * 			max number of contours
      */
 	private ArrayList<Contour> parseContours(ArrayList<Contour> contoursArray) {
 	    
+		
 		ArrayList<Contour> parsedContours = new ArrayList<Contour>();
 	    
 		for (Contour contour : contoursArray) {
@@ -773,6 +785,24 @@ public class BitStage {
 		for (StageElement stageElement : stageElements) {
 			stageElement.draw();
 		}
+	}
+	
+	/**
+     * Returns the first contours of an array 
+     * (normally the biggest ones, since it is configurable in getContours()) 
+     * 
+     * @return ArrayList<Contour>
+     * 			An array of the contours
+     * @param maxContours
+     * 			Maximum contours to return
+	 */
+	private static ArrayList<Contour> getFirstContours(ArrayList<Contour> contoursArray, int maxContours) {
+		
+		if (contoursArray.size() <= maxContours) {
+			return contoursArray;
+		}
+		
+		return new ArrayList<Contour>(contoursArray.subList(0, maxContours-1));
 	}
 	
 	
