@@ -449,26 +449,7 @@ public class BitStage {
 	 */
 	private void blobPersistenceByColor(ArrayList<Contour> colorContours, TrackingColor trackingColor) {
 		
-		PApplet.println("> " + colorContours.size() + " " + trackingColor.displayName() + " contours found!");
-			
-		/*for (int i = 0; i < colorContours.size(); i++) {
-			boolean isAdded = false;
-			for (int j=0; j < stageElements.size(); j++) {
-				StageElement stageElement = stageElements.get(j);
-	        
-				// Check if they are the same
-				if (ContourUtils.contoursAreTheSame(stageElement.getContour(), colorContours.get(i))) {
-					stageElement.setTrackingColor(trackingColor);
-					isAdded = true;
-					break;
-				}
-			}
-	      
-			// If it wasn't added, add new
-			//if (!isAdded) {
-			//	stageElements.add(newStageElement);
-			//}
-	    }*/
+		//PApplet.println("> " + colorContours.size() + " " + trackingColor.displayName() + " contours found!");
 		
 		// Match color contour with a stage element object
 		for (int i = 0; i < colorContours.size(); i++) {
@@ -490,6 +471,25 @@ public class BitStage {
 			StageElement b = stageElements.get(index);
 			b.setTrackingColor(trackingColor);
 	    }
+		
+		/*for (int i = 0; i < colorContours.size(); i++) {
+		boolean isAdded = false;
+		for (int j=0; j < stageElements.size(); j++) {
+			StageElement stageElement = stageElements.get(j);
+        
+			// Check if they are the same
+			if (ContourUtils.contoursAreTheSame(stageElement.getContour(), colorContours.get(i))) {
+				stageElement.setTrackingColor(trackingColor);
+				isAdded = true;
+				break;
+			}
+		}
+      
+		// If it wasn't added, add new
+		//if (!isAdded) {
+		//	stageElements.add(newStageElement);
+		//}
+    	}*/
 	}
 	
 	/**
@@ -680,6 +680,8 @@ public class BitStage {
 	}
 	
 	public void useColorTracking(int thresholdBlockSize, int thresholdConstant, boolean erode, int blur, int threshold) {
+		useColorTracking = true;
+		useAdvancedColorTracking = true;
 		this.colorThresholdBlockSize = thresholdBlockSize;
 		this.colorThresholdConstant = thresholdConstant;
 		this.colorErode = erode;
@@ -762,9 +764,9 @@ public class BitStage {
 	    
 	    if (useColorTracking) {
 	    	PApplet.println("- Color Tracking:  	YES");
-	    	PApplet.println("	- redH:  			" + redH);
-	    	PApplet.println("	- greenH:  			" + greenH);
-	    	PApplet.println("	- blueH:  			" + blueH);
+	    	PApplet.println("	- redH:  	" + redH);
+	    	PApplet.println("	- greenH:	" + greenH);
+	    	PApplet.println("	- blueH:  	" + blueH);
 	    } else {
 	    	PApplet.println("- Color Tracking:  NO");
 	    }

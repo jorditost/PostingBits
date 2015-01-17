@@ -19,6 +19,8 @@ public class StageElement {
   
 	private TrackingColor trackingColor;
 	
+	private boolean initialized;
+	
 	// Am I available to be matched?
 	private boolean available;
 	  
@@ -47,6 +49,7 @@ public class StageElement {
 		//this.boundingBox = new Rectangle();
 		this.trackingColor = TrackingColor.NONE;
 		
+		this.initialized = false;
 		this.available = true;
 	    this.delete = false;
 	    this.timer = persistence;
@@ -68,6 +71,7 @@ public class StageElement {
 		this.contour = new Contour(parent, c.pointMat);
 		this.trackingColor = TrackingColor.NONE;
 		
+		this.initialized = false;
 		this.available = true;
 	    this.delete = false;
 	    this.timer = persistence;
@@ -134,16 +138,15 @@ public class StageElement {
 	 * 
 	 * @return StageElement
 	 */
-	public Object clone() { 
+	public StageElement clone() { 
 		StageElement tmp = new StageElement(parent, id); 
 		tmp.trackingColor = trackingColor;
 		tmp.contour = new Contour(parent, contour.pointMat);
-		//tmp.boundingBox = boundingBox;
-		//tmp.rect = (Rectangle)(rect.clone());
-		
-		tmp.available = available;
-		tmp.delete = delete;
-		tmp.timer = timer;
+
+		tmp.setInitialized(this.initialized);
+		tmp.setAvailable(this.available);
+		tmp.setDelete(this.delete);
+		tmp.setTimer(this.timer);
 		
 		return tmp; 
 	}
@@ -208,7 +211,24 @@ public class StageElement {
 	public void countDown() {    
 	  timer--;
 	}
-
+	
+	public void setTimer(int value) {
+		this.timer = value;
+	}
+	
+	public boolean isNew() {
+		return (initialized == false);
+	}
+	
+	public void initialized() {
+		initialized = true;
+		//parent.println("Initialized! ID: " + this.id);
+	}
+	
+	public void setInitialized(boolean value) {
+		this.initialized = value;
+	}
+	
 	// I am deed, delete me
 	public boolean isDead() {
 	  if (timer < 0) return true;
@@ -227,7 +247,7 @@ public class StageElement {
 		this.delete = true;
 	}
 	
-	public void delete(boolean value) {
+	public void setDelete(boolean value) {
 		this.delete = value;
 	}
 }

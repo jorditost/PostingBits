@@ -3,6 +3,8 @@ package BitStage;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import processing.core.PApplet;
+
 /**
  * Basic transformation utility methods.
  */
@@ -15,8 +17,12 @@ public class TransformUtils {
 		ArrayList<StageElement> clonedArray = new ArrayList<StageElement>();
 		  
 		for (StageElement stageElement : array) {
+			
+			if (!stageElement.isNew()) {
+				PApplet.println("element with id " + stageElement.id + " was already initialized!");
+			}
 		    
-			StageElement clonedStageElement = (StageElement)(stageElement.clone());
+			StageElement clonedStageElement = stageElement.clone();
 		    
 		    Rectangle clonedBoundingBox = clonedStageElement.getBoundingBox();
 		    
@@ -29,6 +35,23 @@ public class TransformUtils {
 		}
 		  
 		return clonedArray;
+	}
+	
+	public static Rectangle scaleBoundingBox(Rectangle r, float factor) {
+		
+		Rectangle rScaled = new Rectangle();
+		rScaled.x      = r.x;
+		rScaled.y      = r.y;
+		rScaled.width  = r.width;
+		rScaled.height = r.height;
+		
+		// Scale
+		rScaled.x      *= factor;
+		rScaled.y      *= factor;
+		rScaled.width  *= factor;
+		rScaled.height *= factor;
+		
+		return rScaled;
 	}
 
 	public static ArrayList<Rectangle> scaleRectanglesArray(ArrayList<Rectangle> array, float factor) {
