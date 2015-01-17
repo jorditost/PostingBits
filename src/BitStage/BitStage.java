@@ -83,8 +83,15 @@ public class BitStage {
 	private int thresholdAfterBlur = 75;
 	private int minBlobSize = 20;
 	private int maxBlobSize = 400;
-	  
-	private boolean useColorTracking;
+	
+	// Color tracking parameters
+	private boolean useColorTracking = false;
+	private boolean useAdvancedColorTracking = false;
+	private int colorThresholdBlockSize = 163;
+	private int colorThresholdConstant = -100;
+	private boolean colorErode = true;
+	private int colorBlur = 20;
+	private int colorThreshold = 170;
 	  
 	// Color tracking parameters
 	private int redH       = -1; //166;  //167;
@@ -108,7 +115,7 @@ public class BitStage {
      */
 	public BitStage(PApplet parent, int width, int height) {
 	    this.parent = parent;
-	    useColorTracking = false;
+	    //useColorTracking = false;
 	    init(width, height);
 	}
 	
@@ -123,7 +130,7 @@ public class BitStage {
      */
 	public BitStage(PApplet parent, String pathToImg) {
 	    this.parent = parent;
-	    useColorTracking = false;
+	    //useColorTracking = false;
 	    initFromString(pathToImg);
 	}
 	
@@ -138,11 +145,11 @@ public class BitStage {
      * @param useColorTracking 
      * 			(Optional) Set to true if you want to perform color tracking
      */
-	public BitStage(PApplet parent, String pathToImg, boolean useColorTracking) {
+	/*public BitStage(PApplet parent, String pathToImg, boolean useColorTracking) {
 	    this.parent = parent;
 	    this.useColorTracking = useColorTracking;
 	    initFromString(pathToImg);
-	}
+	}*/
 	
 	/**
      * Initialize BitStage with an image.
@@ -155,7 +162,7 @@ public class BitStage {
      */
 	public BitStage(PApplet parent, PImage img) {
 	    this.parent = parent;
-	    useColorTracking = false;
+	    //useColorTracking = false;
 	    initFromPImage(img);
 	}
 	
@@ -309,11 +316,11 @@ public class BitStage {
 		// Adaptive threshold - Good when non-uniform illumination
 		if (useAdaptiveThreshold) {
 		
-		// Block size must be odd and greater than 3
-		if (thresholdBlockSize%2 == 0) thresholdBlockSize++;
-		if (thresholdBlockSize < 3) thresholdBlockSize = 3;
-		
-		opencv.adaptiveThreshold(thresholdBlockSize, thresholdConstant);
+			// Block size must be odd and greater than 3
+			if (thresholdBlockSize%2 == 0) thresholdBlockSize++;
+			if (thresholdBlockSize < 3) thresholdBlockSize = 3;
+			
+			opencv.adaptiveThreshold(thresholdBlockSize, thresholdConstant);
 		
 		// Basic threshold - range [0, 255]
 		} else {
@@ -365,8 +372,16 @@ public class BitStage {
 	    // that match the object we want to track.
 	    opencv.inRange(hueValue-rangeWidth/2, hueValue+rangeWidth/2);
 	    
-	    //opencv.dilate();
-	    opencv.erode();
+	    // Filter image
+	    if (useAdvancedColorTracking) {
+			opencv.adaptiveThreshold(colorThresholdBlockSize, colorThresholdConstant);
+			if (colorErode) { opencv.erode(); }
+			opencv.blur(colorBlur);
+			opencv.threshold(colorThreshold);
+			
+	    } else {
+		    opencv.erode();
+	    }
 	    
 	    return opencv.findContours(true,true);
 	}
@@ -389,12 +404,10 @@ public class BitStage {
 	    // Find new contours
 	    contours = opencv.findContours(true, true);
 	    
+	    // Parse which contours are suitable to be stage elements (dimensions)
 	    parsedContours = parseContours(contours);
 	    
-	    // Get stage elements from contours
-	    //newStageElements = parseStageElementsFromContours(contours, TrackingColor.NONE);
-	    //stageElements.addAll(newStageElements);
-	     
+	    // Blob persistence
 	    blobPersistence();
 	    
 	    // Color tracking
@@ -403,58 +416,59 @@ public class BitStage {
 	    	// Find RED Contours
 	    	if (redH > -1) {
 	    		ArrayList<Contour> redContours = parseContours(findContoursByColor(redH));
-	    		redContours = getFirstContours(redContours, 3);
+	    		redContours = ContourUtils.getFirstContours(redContours, 3);
 		    	blobPersistenceByColor(redContours, TrackingColor.RED);
-		    	//contours.addAll(redContours);
-		    	//ArrayList<StageElement> redStageElements = parseStageElementsFromContours(redContours, TrackingColor.RED);
 	    	}
 		  
 	    	// Find GREEN Contours
 	    	if (greenH > -1) {
 		    	ArrayList<Contour> greenContours = parseContours(findContoursByColor(greenH));
-		    	greenContours = getFirstContours(greenContours, 3);
-		    	
-		    	for (Contour c : greenContours) {
-					c.draw();
-				}
-		    	
-		    	PApplet.println("num green contours: " + greenContours.size());
-		    	
+		    	greenContours = ContourUtils.getFirstContours(greenContours, 3);
+		    	//PApplet.println("num green contours: " + greenContours.size());
 		    	blobPersistenceByColor(greenContours, TrackingColor.GREEN);
-		    	//contours.addAll(greenContours);
-		    	//ArrayList<StageElement> greenStageElements = parseStageElementsFromContours(greenContours, TrackingColor.GREEN);
 	    	}
 		  
 	    	// Find BLUE Contours
 	    	if (blueH > -1) {
 		    	ArrayList<Contour> blueContours = parseContours(findContoursByColor(blueH));
-		    	blueContours = getFirstContours(blueContours, 3);
+		    	blueContours = ContourUtils.getFirstContours(blueContours, 3);
 		    	blobPersistenceByColor(blueContours, TrackingColor.BLUE);
-		    	//contours.addAll(blueContours);
-		    	//ArrayList<StageElement> blueStageElements = parseStageElementsFromContours(blueContours, TrackingColor.BLUE);
 	    	}
-	    	
-	    	// Check repeated elements before adding them
-	    	//checkAddedElements(redStageElements, TrackingColor.RED);
-	    	//checkAddedElements(greenStageElements, TrackingColor.GREEN);
-	    	//checkAddedElements(blueStageElements, TrackingColor.BLUE);
-		  
-	    	/*if (method == HYBRID) {
-		    	checkAddedElements(redStageElements, RED);
-		    	checkAddedElements(greenStageElements, GREEN);
-		    	checkAddedElements(blueStageElements, BLUE);
-		  	} else {
-		    	stageElements.addAll(redStageElements);
-		    	stageElements.addAll(greenStageElements);
-		    	stageElements.addAll(blueStageElements);
-		  	}*/
 	    }
 	    
 	    //PApplet.println("Found " + stageElements.size() + " stage elements");
 	    return stageElements;
 	}
 	
+	/**
+	 * Blob persistence by color
+	 * Relates all detected stage elements with its color (detecting contours by colour first)
+	 * 
+	 * @param colorContours	contours detected by hue value
+	 * @param trackingColor 	the ID of the color of this iteration
+	 */
 	private void blobPersistenceByColor(ArrayList<Contour> colorContours, TrackingColor trackingColor) {
+		
+		PApplet.println("> " + colorContours.size() + " " + trackingColor.displayName() + " contours found!");
+			
+		/*for (int i = 0; i < colorContours.size(); i++) {
+			boolean isAdded = false;
+			for (int j=0; j < stageElements.size(); j++) {
+				StageElement stageElement = stageElements.get(j);
+	        
+				// Check if they are the same
+				if (ContourUtils.contoursAreTheSame(stageElement.getContour(), colorContours.get(i))) {
+					stageElement.setTrackingColor(trackingColor);
+					isAdded = true;
+					break;
+				}
+			}
+	      
+			// If it wasn't added, add new
+			//if (!isAdded) {
+			//	stageElements.add(newStageElement);
+			//}
+	    }*/
 		
 		// Match color contour with a stage element object
 		for (int i = 0; i < colorContours.size(); i++) {
@@ -482,7 +496,7 @@ public class BitStage {
 	 * Blob persistence algorithm
 	 * The contours should be filtered before
 	 * 
-	 * @returns TrackingColor	blob color
+	 * @param TrackingColor	blob color
 	 */
 	private void blobPersistence() {
 		
@@ -504,7 +518,7 @@ public class BitStage {
 			
 			// Match existing Stage Elements objects with new Contours
 			for (StageElement b : stageElements) {
-				// Find the new blob newStageElements.get(index) that is closest to blob b
+				// Find the new contour parsedContours.get(index) that is closest to stage element b
 				// set used[index] to true so that it can't be used twice
 				float record = 50000;
 				int index = -1;
@@ -595,90 +609,6 @@ public class BitStage {
 	    return parsedContours;
 	}
 	
-	/**
-     * Parse stage elements from contours depending on size, etc.
-     * 
-     * @param contoursArray
-     * 			Array of the contours
-     * @param colorId
-     * 			The color id
-     * @return ArrayList<StageElement>
-     * 			Cloned array to manipulate outside BitStage
-     */
-	/*private ArrayList<StageElement> parseStageElementsFromContours(ArrayList<Contour> contoursArray, TrackingColor colorId) {
-	    
-		ArrayList<StageElement> tempStageElements = new ArrayList<StageElement>();
-	    
-		for (Contour contour : contoursArray) {
-	      
-			Rectangle r = contour.getBoundingBox();
-	      
-			if (//(float(r.width)/float(displayWidth) > 0.3 || float(r.height)/float(displayWidth) > 0.3) ||
-			   (r.width > maxBlobSize || r.height > maxBlobSize) ||
-			   (r.width < minBlobSize && r.height < minBlobSize))
-				continue;
-	      
-			StageElement stageElement = new StageElement(parent, 0, contour, colorId);
-			tempStageElements.add(stageElement);
-	    }
-	    
-	    return tempStageElements;
-	}*/
-	
-	/**
-     * Check if two bounding boxes are the same.
-     * TO DO: Check the class ContourComparator instead.
-     * 
-     * @param s1
-     * 			First StageElement
-     * @param s2
-     * 			Second StageElement
-	 */
-	private boolean stageElementsAreTheSame(StageElement s1, StageElement s2) {
-	    
-		Rectangle rect1 = s1.getBoundingBox();
-		Rectangle rect2 = s2.getBoundingBox();
- 		
-		return (Math.abs(rect1.x - rect2.x) < 8 && 
-				Math.abs(rect1.y - rect2.y) < 8 && 
-				Math.abs(rect1.width - rect2.width) < 8 && 
-				Math.abs(rect1.height - rect2.height) < 8);
-	}
-	
-	/**
-     * Check the color of new detected elements on stage. Useful when detecting color.
-     * It looks if the detected elements by color were already added in the main detection. 
-     * 
-     * @param newStageElements
-     * 			The recently detected stage elements
-     * @param trackingColor
-     * 			A given color to track
-     * @return ArrayList<Contour>
-     * 			An array of the contours of this color
-	 */
-	private void checkAddedElements(ArrayList<StageElement> newStageElements, TrackingColor trackingColor) {
-	    
-		for (StageElement newStageElement : newStageElements) {
-	      
-			boolean isAdded = false;
-			for (int i=0; i < stageElements.size(); i++) {
-				StageElement stageElement = stageElements.get(i);
-	        
-				// Check if they are the same
-				if (stageElementsAreTheSame(stageElement, newStageElement)) {
-					stageElement.setTrackingColor(trackingColor);
-					isAdded = true;
-					break;
-				}
-			}
-	      
-			// If it wasn't added, add new
-			if (!isAdded) {
-				stageElements.add(newStageElement);
-			}
-	    }
-	}
-	
 	
 	/**
 	 * Set methods
@@ -734,24 +664,38 @@ public class BitStage {
 	public void setMaxBlobSize(int maxBlobSize) {
 	    this.maxBlobSize = maxBlobSize;
 	}
-	  
-	public void useColorTracking() {
-	    useColorTracking = true;
-	}
-	  
-	public void useColorTracking(boolean value) {
-	    useColorTracking = value;
+	 
+	public void setUseColorTracking(boolean value) {
+		useColorTracking = value;
 	}
 	
-	public void setRedHue(int hue) {
+	public void useColorTracking() {
+	    useColorTracking = true;
+	    useAdvancedColorTracking = false;
+	}
+	
+	public void useColorTracking(boolean advancedColorTracking) {
+		useColorTracking = true;
+		useAdvancedColorTracking = advancedColorTracking;
+	}
+	
+	public void useColorTracking(int thresholdBlockSize, int thresholdConstant, boolean erode, int blur, int threshold) {
+		this.colorThresholdBlockSize = thresholdBlockSize;
+		this.colorThresholdConstant = thresholdConstant;
+		this.colorErode = erode;
+		this.colorBlur = blur;
+		this.colorThreshold = threshold;
+	}
+	
+	public void detectRed(int hue) {
 		redH = hue;
 	}
 	
-	public void setGreenHue(int hue) {
+	public void detectGreen(int hue) {
 		greenH = hue;
 	}
 	
-	public void setBlueHue(int hue) {
+	public void detectBlue(int hue) {
 		blueH = hue;
 	}
 	
@@ -786,25 +730,6 @@ public class BitStage {
 			stageElement.draw();
 		}
 	}
-	
-	/**
-     * Returns the first contours of an array 
-     * (normally the biggest ones, since it is configurable in getContours()) 
-     * 
-     * @return ArrayList<Contour>
-     * 			An array of the contours
-     * @param maxContours
-     * 			Maximum contours to return
-	 */
-	private static ArrayList<Contour> getFirstContours(ArrayList<Contour> contoursArray, int maxContours) {
-		
-		if (contoursArray.size() <= maxContours) {
-			return contoursArray;
-		}
-		
-		return new ArrayList<Contour>(contoursArray.subList(0, maxContours-1));
-	}
-	
 	
 	/**
 	 * Prints a list with the filter values

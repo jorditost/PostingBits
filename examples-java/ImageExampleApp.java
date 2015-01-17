@@ -13,9 +13,9 @@ public class ImageExampleApp extends PApplet {
 		stage = new BitStage(this, "kitchen.jpg");
 		
 		stage.useColorTracking(true);
-		stage.setRedHue(166);
-		//stage.setGreenHue(44);
-		stage.setBlueHue(104);
+		stage.detectRed(166);
+		stage.detectGreen(44);
+		stage.detectBlue(104);
 		
 		stage.detect();
 		

@@ -92,7 +92,15 @@ public class StageElement {
 	    this.delete = false;
 	    this.timer = persistence;
 	}*/
-
+	
+	/**
+	 * Get the contour.
+	 * 
+	 * @return Contour
+	 */
+	public Contour getContour(){
+		return contour;
+	}
 	
 	/**
 	 * Get the bounding box for the Contour.
@@ -101,7 +109,6 @@ public class StageElement {
 	 */
 	public Rectangle getBoundingBox(){
 		return contour.getBoundingBox();
-		//return boundingBox;
 	}
 	
 	/**
