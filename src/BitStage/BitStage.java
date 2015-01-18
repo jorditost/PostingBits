@@ -65,6 +65,8 @@ public class BitStage {
 	// Number of stage elements detected over all time. Used to set IDs.
 	int blobCount = 0;
 	
+	boolean useBlobPersistence = false;
+	
 	// List of the new parsed stage elements (every frame)
 	//ArrayList<StageElement> newStageElements;
   
@@ -408,7 +410,16 @@ public class BitStage {
 	    parsedContours = parseContours(contours);
 	    
 	    // Blob persistence
-	    blobPersistence();
+	    if (useBlobPersistence) {
+	    	blobPersistence();
+	    } else {
+	    	stageElements.clear();
+		    for (int i = 0; i < parsedContours.size(); i++) {
+				//println("+++ New blob detected with ID: " + blobCount);
+				stageElements.add(new StageElement(parent, blobCount, parsedContours.get(i)));
+				blobCount++;
+			}
+	    }	    
 	    
 	    // Color tracking
 	    if (useColorTracking) {

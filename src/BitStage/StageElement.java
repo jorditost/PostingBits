@@ -28,7 +28,7 @@ public class StageElement {
 	private boolean delete;
 	  
 	// How long should I live if I have disappeared?
-	private int persistence = 5; //127;
+	private int persistence = 1; //127;
 	private int timer;
 	  
 	// Unique ID for each stage element
