@@ -1,4 +1,4 @@
-package BitStage;
+package PostingBits;
 
 import java.awt.Rectangle;
 
@@ -113,6 +113,15 @@ public class StageElement {
 	 */
 	public Rectangle getBoundingBox(){
 		return contour.getBoundingBox();
+	}
+	
+	/**
+	 * Get the contour's convex hull.
+	 * 
+	 * @return Contour
+	 */
+	public Contour getConvexHull(){
+		return contour.getConvexHull();
 	}
 	
 	/**

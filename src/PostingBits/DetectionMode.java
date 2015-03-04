@@ -6,12 +6,12 @@
  * enum TrackingColorMode {GRAY, S} //{TRACK_COLOR_RGB, TRACK_COLOR_HSV, TRACK_COLOR_H, TRACK_COLOR_HS};
  */
 
-package BitStage;
+package PostingBits;
 	
 public enum DetectionMode { 
 	CHANNEL_GRAY, 		// Gray channel. More stable with video source
 	CHANNEL_S, 			// Saturation channel
-	BG_SUBTRACTION;	// Background Subtraction
+	BG_SUBTRACTION;		// Background Subtraction
 	
 	
 	public String displayName() {

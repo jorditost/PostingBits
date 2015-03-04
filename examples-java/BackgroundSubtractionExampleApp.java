@@ -1,19 +1,19 @@
 import processing.core.PApplet;
 import processing.video.*;
-import BitStage.*;
+import PostingBits.*;
 
 /**
  * Simple detection with background detection
  */
 public class BackgroundSubtractionExampleApp extends PApplet {
 
-	BitStage stage;
+	PostingBits stage;
 	Movie video;
 
 	public void setup() {
 		video = new Movie(this, "map_isight_med.mov");
 		
-		stage = new BitStage(this, 640, 480);
+		stage = new PostingBits(this, 640, 480);
 		
 		// Set background subtraction
 		stage.setDetectionMode(DetectionMode.BG_SUBTRACTION);

@@ -1,4 +1,4 @@
-package BitStage;
+package PostingBits;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class TransformUtils {
 	
 	public static ArrayList<StageElement> scaleStageElementsArray(ArrayList<StageElement> array, float factor) {
 		  
-		// We have to clone the stage elements so as not to modify original values from BitStage
+		// We have to clone the stage elements so as not to modify original values from PostingBits
 		  
 		ArrayList<StageElement> clonedArray = new ArrayList<StageElement>();
 		  

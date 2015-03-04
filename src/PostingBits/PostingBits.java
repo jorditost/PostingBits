@@ -25,7 +25,7 @@
  * @version     ##library.prettyVersion## (##library.version##)
  */
 
-package BitStage;
+package PostingBits;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ import gab.opencv.*;
  * https://github.com/atduskgreg/opencv-processing
  */
 
-public class BitStage {
+public class PostingBits {
 		
 	PApplet parent;
 	
@@ -106,7 +106,7 @@ public class BitStage {
 	
 	
 	/**
-     * Initialize BitStage with a width and height.
+     * Initialize PostingBits with a width and height.
      * You will need to load an image in before processing.
      * Good when working with video.
      * 
@@ -115,14 +115,14 @@ public class BitStage {
      * @param width
      * @param height
      */
-	public BitStage(PApplet parent, int width, int height) {
+	public PostingBits(PApplet parent, int width, int height) {
 	    this.parent = parent;
 	    //useColorTracking = false;
 	    init(width, height);
 	}
 	
 	/**
-     * Initialize BitStage with the path to an image.
+     * Initialize PostingBits with the path to an image.
      * The image will be loaded and prepared for processing.
      * 
      * @param parent 
@@ -130,14 +130,14 @@ public class BitStage {
      * @param pathToImg
      * 			A String with a path to the image to be loaded
      */
-	public BitStage(PApplet parent, String pathToImg) {
+	public PostingBits(PApplet parent, String pathToImg) {
 	    this.parent = parent;
 	    //useColorTracking = false;
 	    initFromString(pathToImg);
 	}
 	
 	/**
-     * Initialize BitStage with the path to an image.
+     * Initialize PostingBits with the path to an image.
      * The image will be loaded and prepared for processing.
      * 
      * @param parent
@@ -147,14 +147,14 @@ public class BitStage {
      * @param useColorTracking 
      * 			(Optional) Set to true if you want to perform color tracking
      */
-	/*public BitStage(PApplet parent, String pathToImg, boolean useColorTracking) {
+	/*public PostingBits(PApplet parent, String pathToImg, boolean useColorTracking) {
 	    this.parent = parent;
 	    this.useColorTracking = useColorTracking;
 	    initFromString(pathToImg);
 	}*/
 	
 	/**
-     * Initialize BitStage with an image.
+     * Initialize PostingBits with an image.
      * The image will be loaded and prepared for processing.
      * 
      * @param parent 
@@ -162,7 +162,7 @@ public class BitStage {
      * @param img
      * 			A PImage to be loaded
      */
-	public BitStage(PApplet parent, PImage img) {
+	public PostingBits(PApplet parent, PImage img) {
 	    this.parent = parent;
 	    //useColorTracking = false;
 	    initFromPImage(img);
@@ -741,6 +741,9 @@ public class BitStage {
 	public void drawStageElements() {
 		for (StageElement stageElement : stageElements) {
 			stageElement.draw();
+			
+			//Contour c = stageElement.getConvexHull();
+			//c.draw();
 		}
 	}
 	
@@ -749,7 +752,7 @@ public class BitStage {
 	 */
 	public void listFilterValues() {
 		PApplet.println(" ");
-		PApplet.println("BitStage filter values");
+		PApplet.println("PostingBits filter values");
 		PApplet.println("==============================");
 		PApplet.println("- Detection Mode:          " + detectionMode.displayName());
 		PApplet.println("- Contrast:                " + contrast);

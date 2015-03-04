@@ -2,21 +2,21 @@ import java.util.ArrayList;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-import BitStage.*;
+import PostingBits.*;
 
 /**
  * Performs a basic detection from an image.
  */
 public class BlobPersistenceImageExampleApp extends PApplet {
 
-	BitStage stage;
+	PostingBits stage;
 	PImage src;
 	ArrayList<StageElement> stageElements;
 	ArrayList<StageElement> tempStageElements;
 	
 	public void setup() {
 		src = loadImage("kitchen.jpg");
-		stage = new BitStage(this, src.width, src.height);
+		stage = new PostingBits(this, src.width, src.height);
 		
 		stage.useColorTracking(true);
 		stage.detectRed(166);

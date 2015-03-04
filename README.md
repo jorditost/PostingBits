@@ -1,10 +1,10 @@
-BitStage
+Posting Bits
 ==============
 
 Processing library by Jordi Tost
 Follow on [@jorditost](http://twitter.com/jorditost)
 
-Detects the elements added to a stage (wall, etc).
+Detects the elements added to a scene (wall, etc).
 
 ## Dependencies
 

@@ -1,20 +1,20 @@
 import processing.core.PApplet;
 import processing.core.PImage;
-import BitStage.*;
+import PostingBits.*;
 
 /**
  * Simple detection from the difference between two images (background subtraction)
  */
 public class ImageDiffExampleApp extends PApplet {
 
-	BitStage stage;
+	PostingBits stage;
 	PImage before, after;
 
 	public void setup() {
 		before = loadImage("map_before.jpg");
 		after = loadImage("map_after.jpg");
 		
-		stage = new BitStage(this, before.width, before.height);
+		stage = new PostingBits(this, before.width, before.height);
 		
 		// Set background substraction
 		stage.setDetectionMode(DetectionMode.BG_SUBTRACTION);
