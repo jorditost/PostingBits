@@ -1,7 +1,8 @@
 Posting Bits
 ==============
 
-Processing library by Jordi Tost
+A Library for Designing Seamless Interactive Environments in Processing.
+
 Follow on [@jorditost](http://twitter.com/jorditost)
 
 Detects the elements added to a scene (wall, etc).
