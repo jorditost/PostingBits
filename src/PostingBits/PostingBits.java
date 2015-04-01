@@ -741,9 +741,40 @@ public class PostingBits {
 	public void drawStageElements() {
 		for (StageElement stageElement : stageElements) {
 			stageElement.draw();
+		}
+	}
+	
+	public void drawPolygonApproximation() {
+		
+		parent.stroke(255, 255, 0);
+    	parent.fill(255, 255, 0, 150);
+    	
+		for (StageElement stageElement : stageElements) {
 			
-			//Contour c = stageElement.getConvexHull();
-			//c.draw();
+			// Get Contour
+			Contour c = stageElement.getContour();
+			
+			// Get Polygon Approximation
+			//println("approx: " + c.getPolygonApproximationFactor());
+			//c.setPolygonApproximationFactor(3.0);
+			Contour cApprox = c.getPolygonApproximation();
+			
+			// Get Polygon Approximation's points
+			ArrayList<PVector> points = cApprox.getPoints();
+			
+			parent.beginShape();
+			for (PVector p : points) {
+				parent.vertex(p.x, p.y);
+			}
+			parent.endShape(PConstants.CLOSE);
+			
+//			for (int i=0; i<points.size(); i++) {
+//				if (i<points.size()-1) {
+//					line(points.get(i).x, points.get(i).y, points.get(i+1).x, points.get(i+1).y);
+//				} else {
+//					line(points.get(i).x, points.get(i).y, points.get(0).x, points.get(0).y);
+//				}
+//			}
 		}
 	}
 	

@@ -28,7 +28,7 @@ public class StageElement {
 	private boolean delete;
 	  
 	// How long should I live if I have disappeared?
-	private int persistence = 1; //127;
+	private int persistence = 10; //127;
 	private int timer;
 	  
 	// Unique ID for each stage element
@@ -113,15 +113,6 @@ public class StageElement {
 	 */
 	public Rectangle getBoundingBox(){
 		return contour.getBoundingBox();
-	}
-	
-	/**
-	 * Get the contour's convex hull.
-	 * 
-	 * @return Contour
-	 */
-	public Contour getConvexHull(){
-		return contour.getConvexHull();
 	}
 	
 	/**

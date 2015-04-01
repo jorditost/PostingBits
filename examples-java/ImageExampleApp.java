@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import PostingBits.*;
@@ -11,12 +13,15 @@ public class ImageExampleApp extends PApplet {
 
 	public void setup() {
 		stage = new PostingBits(this, "kitchen.jpg");
-		//stage = new PostingBits(this, "stage-640x480.jpg");
 		
-		stage.useColorTracking(true);
+		stage.setThreshold(115);
+		//stage.useColorTracking(true);
 		//stage.detectRed(166);
 		//stage.detectGreen(44);
 		//stage.detectBlue(104);
+		
+		// List all filter values
+		stage.listFilterValues();
 		
 		stage.detect();
 		

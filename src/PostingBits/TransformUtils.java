@@ -4,6 +4,9 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
+import processing.core.PVector;
+
+import gab.opencv.Contour;
 
 /**
  * Basic transformation utility methods.
