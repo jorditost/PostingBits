@@ -1,9 +1,13 @@
 Posting Bits
 ==============
 
-A Library for Designing Seamless Interactive Environments in Processing.
+A Library for Designing Seamless Interactive Environments in Processing. This open source library connects a video device (camera, kinect, web cam) and allows the tracking of objects in a wall. The results obtained of the real-time tracking (set objects with coordinates and outline) can be used for many applications, such projection mapping or interactive projection.
 
-This library was developed as part of my Master Thesis in Interface Design at the [University of Applied Sciences Potsdam](http://design.fh-potsdam.de), named *POSTING BITS – Exploring new Interaction Paradigms using Sticky Notes, Paper Maps and Sketches*.
+An example is this interactive [Super Mario video game](https://github.com/jorditost/SuperMarioCV), also freely available.
+
+This library was developed as part of my Master Thesis in Interface Design at the [University of Applied Sciences Potsdam](http://design.fh-potsdam.de), named *POSTING BITS – Exploring new Interaction Paradigms using Sticky Notes, Paper Maps and Sketches*. You can read more about my master thesis [here](http://www.applaus-potsdam.de/2015/aussteller/jordi-tostval/).
+
+
 
 Notice that this is a beta version and you can find some bugs or inconsistencies. Please, share your findings in the [issues section](https://github.com/jorditost/PostingBits/issues) of this repository and feel free to fork and contribute.
 
